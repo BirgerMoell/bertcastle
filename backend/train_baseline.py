@@ -4,9 +4,10 @@ import torch
 import torch.nn as nn
 
 import torch.utils.data as data
-import pytorch_pretrained_bert as bert
 
 import pandas as pd
+
+import utils
 
 
 class BertEncodedSpamData(data.Dataset):
@@ -17,28 +18,15 @@ class BertEncodedSpamData(data.Dataset):
         point = int((len(self.df)*0.7))
         self.df = self.df[:point] if mode == "train" else self.df[point:]
 
-        # Pytorch bert boilerplate
-        self.tokenizer = bert.BertTokenizer.from_pretrained('bert-base-uncased')
-        self.model = bert.BertModel.from_pretrained('bert-base-uncased')
-        self.model.eval()
+        self.bertwrapper = utils.BertWrapper()
 
-    def _encode(self, text):
-        tokenized_text = self.tokenizer.tokenize(text)
-        indexed_tokens = self.tokenizer.convert_tokens_to_ids(tokenized_text)
-        segment_ids = [0 for i in indexed_tokens]  # Note, this can be improved
-
-        tokens = torch.tensor([indexed_tokens])
-        segments = torch.tensor([segment_ids])
-
-        _, features = self.model(tokens, segments)
-        return features.view(-1).detach()
 
     def __getitem__(self, item):
         label, text = tuple(self.df[key][item] for key in ("v1", "v2"))
 
         label_ohe = 1 if label == "spam" else 0  # It's very nice
 
-        bert_text = self._encode(text)
+        bert_text = self.bertwrapper.encode(text)
 
         return bert_text, torch.tensor(label_ohe)
 
@@ -52,12 +40,7 @@ def train(model, data_loader, epochs):
 
 if __name__=="__main__":
 
-    model = nn.Sequential(
-        nn.Linear(768, 128),
-        nn.ReLU(),
-        nn.Linear(128, 1),
-        nn.Sigmoid(),
-    )
+    model = utils.simple_mlp
 
     train_data = BertEncodedSpamData('train')
     test_data = BertEncodedSpamData('test')
