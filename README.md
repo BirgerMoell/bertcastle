@@ -1,1 +1,2 @@
-# bertcastle
+# Bertcastle - the castle of bert
+This is where the magic happens. We just have to figure out what to do first...
