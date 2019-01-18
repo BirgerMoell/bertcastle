@@ -70,7 +70,7 @@ if __name__=="__main__":
     optimizer = torch.optim.Adam(model.parameters())
 
     # Main train loop
-    epochs = 3
+    epochs = 5
     for epoch in range(epochs):
         for features, targets in tqdm.tqdm(train_loader):
             predictions = model(features)
