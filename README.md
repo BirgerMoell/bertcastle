@@ -15,10 +15,10 @@ Working web app in react with trained Pytorch BERT Modelfor SPAM Classifier serv
 ![alt text](https://i.imgur.com/TWfoTOC.png "Bert")
 
 ## Roadmap
--- Train the model on different NLP datasets
--- Create a better visualisation of input / output
--- Tune neural network hyperparamets
--- Serve FLASK model from server
+- Train the model on different NLP datasets
+- Create a better visualisation of input / output
+- Tune neural network hyperparamets
+- Serve FLASK model from server
 
 This is where the magic happens. We just have to figure out what to do first...
 
