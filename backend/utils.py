@@ -5,7 +5,6 @@ import pickle
 
 import pytorch_pretrained_bert as bert
 
-
 class BertWrapper():
     def __init__(self):
         # Pytorch bert boilerplate
