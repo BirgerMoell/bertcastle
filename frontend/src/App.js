@@ -14,11 +14,44 @@ class App extends Component {
 
   handleChange = async (event) => {
     this.setState({ value: event.target.value })
-    const url= "https://localhost:5000/model"
-    const body = {
+    const url= "http://localhost:5000/api"
+    const data = {
       text: event.target.value
     }
-    const response = await postJson(url, body)
+    //const response = await postJson(url, data)
+
+    const response = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json"
+      },
+    })
+
+    // const response = await fetch("http://localhost:5000/api", {
+    //     body: "{\"text\":\"win money today!!\", \"key2\":\"value2\"}",
+    //     headers: {
+    //       "Content-Type": "application/json"
+    //     },
+    //     method: "POST"
+    //   })
+
+    const responseJson = await response.json()
+
+    console.log("the response is", responseJson)
+
+    if(responseJson > 0.10) {
+      this.setState({
+        spam: true
+      })
+    }
+      else {
+        this.setState({
+          spam: false
+        })
+      }
+
+
   }
 
   render () {

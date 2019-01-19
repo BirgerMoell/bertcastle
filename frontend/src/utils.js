@@ -1,6 +1,6 @@
 import uuidv4 from 'uuid/v4'
 
-async function _getJson(url) {
+async function _getJson (url) {
   const response = await fetch(url, {
     credentials: 'include',
     mode: 'cors'
@@ -12,7 +12,7 @@ Failed to GET ${url}`)
   return response.json()
 }
 
-export const getJson = async function(url) {
+export const getJson = async function (url) {
   try {
     return await _getJson(url)
   } catch (err) {
@@ -20,14 +20,11 @@ export const getJson = async function(url) {
   }
 }
 
-export const postJson = async function(url, body, skipCredentials) {
+export const postJson = async function (url, body) {
   try {
     const response = await fetch(url, {
       method: 'POST',
-      credentials: !skipCredentials ? 'include' : undefined,
-      mode: 'cors',
       headers: {
-        Accept: 'application/json',
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(body)
