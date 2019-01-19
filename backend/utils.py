@@ -1,7 +1,10 @@
-import torch
-import torch.nn as nn
 import tqdm
 import pickle
+
+import torch
+from torch.utils import data
+import torch.nn as nn
+import pandas as pd
 
 import pytorch_pretrained_bert as bert
 
@@ -26,6 +29,33 @@ class BertWrapper():
 
     def __call__(self, text):
         return self.encode(text)
+
+
+class BertEncodedSpamData(data.Dataset):
+    def __init__(self, mode):
+        super().__init__()
+        self.df = pd.read_csv("./data/spam.csv")
+
+        point = int((len(self.df)*0.7))
+        self.df = self.df[:point] if mode == "train" else self.df[point:]
+
+        self.start_idx = 0 if mode == "train" else point
+
+        self.bertwrapper = BertWrapper()
+
+
+    def __getitem__(self, item):
+        item += self.start_idx
+        label, text = tuple(self.df[key][item] for key in ("v1", "v2"))
+
+        label_ohe = 1 if label == "spam" else 0  # It's very nice
+
+        bert_text = self.bertwrapper.encode(text)
+
+        return bert_text, torch.tensor(label_ohe)
+
+    def __len__(self):
+        return len(self.df)
 
 
 def daze(dataset: "instance of a dataset", verbose=False):
