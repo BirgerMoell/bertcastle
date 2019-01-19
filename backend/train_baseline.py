@@ -42,7 +42,7 @@ if __name__=="__main__":
 
     model = utils.simple_mlp
 
-    train_data = BertEncodedSpamData('train')
+    train_data = utils.daze(BertEncodedSpamData('train'), verbose=True)
     test_data = BertEncodedSpamData('test')
 
     train_loader = data.DataLoader(train_data, batch_size=32, shuffle=True, num_workers=1)
@@ -53,7 +53,7 @@ if __name__=="__main__":
     optimizer = torch.optim.Adam(model.parameters())
 
     # Main train loop
-    epochs = 5
+    epochs = 100
     for epoch in range(epochs):
         for features, targets in tqdm.tqdm(train_loader):
             predictions = model(features)

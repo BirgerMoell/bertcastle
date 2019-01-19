@@ -1,5 +1,7 @@
 import torch
 import torch.nn as nn
+import tqdm
+import pickle
 
 import pytorch_pretrained_bert as bert
 
@@ -24,6 +26,30 @@ class BertWrapper():
 
     def __call__(self, text):
         return self.encode(text)
+
+
+def daze(dataset: "instance of a dataset", verbose=False):
+    """ Stores the entire dataset on disk and returns a
+    dazed version of the dataset """
+
+    class DazedData(dataset.__class__):
+        def __init__(self, dataset):
+            self.len = len(dataset)
+
+        def __getitem__(self, item):
+            if item not in range(self.len):
+                raise IndexError("Index out of range")
+            return pickle.load(open(f"/tmp/daze/{item}.pickle", "rb"))
+
+        def __len__(self):
+            return self.len
+
+    progress = tqdm.tqdm if verbose else lambda i: i
+
+    for item in progress(range(len(dataset))):
+        pickle.dump(dataset[item], open(f"/tmp/daze/{item}.pickle", "wb"))
+
+    return DazedData(dataset)
 
 
 simple_mlp = nn.Sequential(

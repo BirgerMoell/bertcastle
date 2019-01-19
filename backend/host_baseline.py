@@ -5,7 +5,7 @@ import utils
 app = flask.Flask(__name__)
 
 model = utils.simple_mlp
-model.load_state_dict(torch.load("models/model1.params"))
+model.load_state_dict(torch.load("models/model9.params"))
 
 bertwrap = utils.BertWrapper()
 
