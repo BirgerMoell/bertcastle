@@ -19,6 +19,7 @@ Working web app in react with trained Pytorch BERT Modelfor SPAM Classifier serv
 - Create a better visualisation of input / output
 - Tune neural network hyperparamets
 - Serve FLASK model from server
+- Generate langauge with BERT and GANs
 
 This is where the magic happens. We just have to figure out what to do first...
 
