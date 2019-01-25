@@ -1,11 +1,12 @@
 import torch
 from torch.utils import data
 import utils
+import settings
 
 if __name__ == "__main__":
 
     model = utils.simple_mlp
-    model.load_state_dict(torch.load("models/model19.params"))
+    model.load_state_dict(torch.load(settings.LOAD_MODEL))
 
     test_data = utils.BertEncodedSpamData('test')
     test_loader = data.DataLoader(test_data, batch_size=32, shuffle=False, num_workers=1)

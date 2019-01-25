@@ -1,3 +1,5 @@
+import os
+import tempfile
 import tqdm
 import pickle
 
@@ -8,11 +10,17 @@ import pandas as pd
 
 import pytorch_pretrained_bert as bert
 
+
 class BertWrapper():
-    def __init__(self):
-        # Pytorch bert boilerplate
+    def __init__(self,*, bert_path: "Path to stored offline bert model" = None):
         self.tokenizer = bert.BertTokenizer.from_pretrained('bert-base-uncased')
-        self.model = bert.BertModel.from_pretrained('bert-base-uncased')
+
+        if bert_path:
+            self.model = torch.load(bert_path)
+        else:
+            # This will fetch a remotely hosted model and does not work offline
+            self.model = bert.BertModel.from_pretrained('bert-base-uncased')
+
         self.model.eval()
 
     def encode(self, text):
@@ -31,7 +39,7 @@ class BertWrapper():
 
 
 class BertEncodedSpamData(data.Dataset):
-    def __init__(self, mode):
+    def __init__(self, mode,*, bert_path=None):
         super().__init__()
         self.df = pd.read_csv("./data/spam.csv")
 
@@ -40,7 +48,7 @@ class BertEncodedSpamData(data.Dataset):
 
         self.start_idx = 0 if mode == "train" else point
 
-        self.bertwrapper = BertWrapper()
+        self.bertwrapper = BertWrapper(bert_path=bert_path)
 
 
     def __getitem__(self, item):
@@ -61,6 +69,8 @@ def daze(dataset: "instance of a dataset", verbose=False):
     """ Stores the entire dataset on disk and returns a
     dazed version of the dataset """
 
+    get_path = lambda i: os.path.join(tempfile.gettempdir(), f"{i}.pickle")
+
     class DazedData(dataset.__class__):
         def __init__(self, dataset):
             self.len = len(dataset)
@@ -68,7 +78,7 @@ def daze(dataset: "instance of a dataset", verbose=False):
         def __getitem__(self, item):
             if item not in range(self.len):
                 raise IndexError("Index out of range")
-            return pickle.load(open(f"tmp/daze/{item}.pickle", "rb"))
+            return pickle.load(open(get_path(item), "rb"))
 
         def __len__(self):
             return self.len
@@ -76,7 +86,7 @@ def daze(dataset: "instance of a dataset", verbose=False):
     progress = tqdm.tqdm if verbose else lambda i: i
 
     for item in progress(range(len(dataset))):
-        pickle.dump(dataset[item], open(f"tmp/daze/{item}.pickle", "wb"))
+        pickle.dump(dataset[item], open(get_path(item), "wb"))
 
     return DazedData(dataset)
 
