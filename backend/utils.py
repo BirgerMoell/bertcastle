@@ -8,7 +8,6 @@ import pandas as pd
 
 import pytorch_pretrained_bert as bert
 
-
 class BertWrapper():
     def __init__(self):
         # Pytorch bert boilerplate
@@ -69,7 +68,7 @@ def daze(dataset: "instance of a dataset", verbose=False):
         def __getitem__(self, item):
             if item not in range(self.len):
                 raise IndexError("Index out of range")
-            return pickle.load(open(f"/tmp/daze/{item}.pickle", "rb"))
+            return pickle.load(open(f"tmp/daze/{item}.pickle", "rb"))
 
         def __len__(self):
             return self.len
@@ -77,7 +76,7 @@ def daze(dataset: "instance of a dataset", verbose=False):
     progress = tqdm.tqdm if verbose else lambda i: i
 
     for item in progress(range(len(dataset))):
-        pickle.dump(dataset[item], open(f"/tmp/daze/{item}.pickle", "wb"))
+        pickle.dump(dataset[item], open(f"tmp/daze/{item}.pickle", "wb"))
 
     return DazedData(dataset)
 

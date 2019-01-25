@@ -1,12 +1,8 @@
 import tqdm
-
 import torch
 import torch.nn as nn
-
 import torch.utils.data as data
-
 import pandas as pd
-
 import utils
 
 
