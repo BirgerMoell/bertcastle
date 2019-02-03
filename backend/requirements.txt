@@ -2,4 +2,6 @@ pytorch
 tqdm
 pandas
 pytorch-pretrained-bert
+numpy
+sklearn
 
