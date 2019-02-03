@@ -12,8 +12,13 @@ import pytorch_pretrained_bert as bert
 
 
 class BertWrapper():
-    def __init__(self,*, bert_path: "Path to stored offline bert model" = None):
-        self.tokenizer = bert.BertTokenizer.from_pretrained('bert-base-uncased')
+
+    def __init__(self,*, bert_path: "Path to stored offline bert model" = None, vocab = None):
+
+        if vocab:
+            self.tokenizer = bert.BertTokenizer.from_pretrained(vocab)
+        else:
+            self.tokenizer = bert.BertTokenizer.from_pretrained('bert-base-uncased')
 
         if bert_path:
             self.model = torch.load(bert_path)
