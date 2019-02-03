@@ -11,7 +11,7 @@ class App extends Component {
         <Router>
           <div>
 
-            <Route exact path='/' component={Spam} />
+            <Route exact path='/' component={Chat} />
             <Route path='/spam' component={Spam} />
             <Route path='/chat' component={Chat} />
           </div>

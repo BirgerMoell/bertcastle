@@ -9,13 +9,19 @@ import nearest
 
 
 app = flask.Flask(__name__)
-CORS(app, resources={r"/api/*": {"origins": "*"}})
+CORS(app)
 
 corpus = json.load(open('./data/movie_lines.json'))
 
-ns = nearest.NearestSentence(corpus=corpus[:600])
+ns = nearest.NearestSentence(corpus=corpus[:2000])
 
-@app.route("/nearest/<path:text>")
-def nearest(text):
-    return ns.nearest(text)
+#@app.route("/nearest/<path:text>")
+#def nearest(text):
+#    return ns.nearest(text)
 
+
+@app.route('/nearest', methods=['POST'])
+def classify():
+      text = request.json['text']
+      print(text)
+      return jsonify(ns.nearest(text))

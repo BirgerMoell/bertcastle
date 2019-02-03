@@ -19,12 +19,16 @@ class Chat extends Component {
   }
 
   getResponse = async (newMessage) => {
-    const url= "http://localhost:5000/model"
+    const url= "http://localhost:5000/nearest"
     const body = {
       text: newMessage
     }
-    const response = await postJson(url, body)
-    return response
+    const response = await fetch("http://localhost:5000/nearest",
+    { body: JSON.stringify(body), headers: { "Content-Type": "application/json" }, method: "POST" })
+    console.log(response)
+    let responseJson = await response.json()
+    console.log("the response json is", responseJson)
+    return responseJson
   }
 
   render() {
