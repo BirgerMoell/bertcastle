@@ -23,7 +23,7 @@ class Chat extends Component {
     const body = {
       text: newMessage
     }
-    const response = await fetch("http://localhost:5000/nearest",
+    const response = await fetch("http://localhost:5050/nearest",
     { body: JSON.stringify(body), headers: { "Content-Type": "application/json" }, method: "POST" })
     console.log(response)
     let responseJson = await response.json()

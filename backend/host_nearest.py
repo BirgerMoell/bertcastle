@@ -13,7 +13,7 @@ CORS(app)
 
 corpus = json.load(open('./data/movie_lines.json'))
 
-ns = nearest.NearestSentence(corpus=corpus[:2000])
+ns = nearest.NearestSentence(corpus=corpus[:500])
 
 #@app.route("/nearest/<path:text>")
 #def nearest(text):
